@@ -9,35 +9,33 @@ function App() {
   // then set the value in the --vh custom property to the root of the document
   document.documentElement.style.setProperty('--vh', `${vh}px`);
 
-  // 預設的中心位置
+  // 預設的中心位置：忠孝復興
   // const defaultPosition = [25.044761, 121.536651];
   const defaultPosition = [25.037146691182055, 121.56628039692905];
 
-  // 先取一個 data 座標試試看
-  // const getPosition = () => {
-  // const x = parkingLot.data.park[1].tw97x;
-  // const y = parkingLot.data.park[1].tw97y;
-  const { id, name, payex, tw97x: x, tw97y: y } = parkingLot.data.park[1];
-  const WGS84 = tw97ToWGS84(x, y);
-  const { lat, lng } = WGS84;
-  const markerPosition = [lat, lng];
-  console.log(markerPosition);
-  //   return newPosition;
-  // };
-
-  // const newPosition = getPosition();
-  // console.log(newPosition);
-
   // 嘗試 render dummy markers
-  // const renderMarkers = markers.map((marker)=> {
-  //   return (
-  //     <Marker key={} position={position}>
-  //       <Popup>
-  //         A pretty CSS3 popup. <br /> Easily customizable.
-  //       </Popup>
-  //     </Marker>
-  //   );
-  // })
+  // 取出資料
+  const markers = parkingLot.data.park;
+  // render 每一筆資料
+  const renderMarkers = markers.map((marker) => {
+    // 開始處理取值轉換：將取出的值定義變數 x y
+    const { tw97x: x, tw97y: y } = marker;
+    // 引入函式轉換 WGS84
+    const WGS84 = tw97ToWGS84(x, y);
+    console.log(WGS84);
+    // 物件取值經緯度（為數字）
+    const { lat, lng } = WGS84;
+    // 定義該 marker 的 position
+    const markerPosition = [lat, lng];
+    return (
+      <Marker key={marker.id} position={markerPosition}>
+        <Popup>
+          <h3>{marker.name}</h3>
+          <p>{marker.payex}</p>
+        </Popup>
+      </Marker>
+    );
+  });
 
   return (
     <>
@@ -58,15 +56,8 @@ function App() {
           />
           {/* 設定使用者一進入畫面的位置 */}
 
-          {/* 嘗試 抓取一個 dummy marker */}
-          <Marker position={markerPosition}>
-            <Popup>
-              <h3>{name}</h3>
-              <p>{payex}</p>
-            </Popup>
-          </Marker>
           {/* 嘗試 render dummy marker */}
-          {/* {renderMarkers} */}
+          {renderMarkers}
         </MapContainer>
       </div>
     </>
