@@ -13,24 +13,40 @@ function App() {
   // const defaultPosition = [25.044761, 121.536651];
   const defaultPosition = [25.037146691182055, 121.56628039692905];
 
-  // 嘗試 render dummy markers
-  // 取出資料
+  // 嘗試 render dummy markers & spaces
+  // 取出停車場資料
   const markers = parkingLot.data.park;
+  // 取出剩餘車位資料
+  const spacesLeft = available.data.park;
+
   // render 每一筆資料
   const renderMarkers = markers.map((marker) => {
-    // 開始處理取值轉換：將取出的值定義變數 x y
+    // 取值轉換 marker 的經緯度：將取出的值定義變數 x y
     const { tw97x: x, tw97y: y } = marker;
     // 引入函式轉換 WGS84
     const WGS84 = tw97ToWGS84(x, y);
-    console.log(WGS84);
     // 物件取值經緯度（為數字）
     const { lat, lng } = WGS84;
     // 定義該 marker 的 position
     const markerPosition = [lat, lng];
+
+    // 嘗試取出剩餘車位資料
+    // 如果 spacesLeft 裡面的每筆資料 (index) 的 id 跟 掃描 markers 裡面的每筆資料 (index) 的 id，相符，則取出 availablecar 的值。
     return (
       <Marker key={marker.id} position={markerPosition}>
         <Popup>
-          <h3>{marker.name}</h3>
+          <h2>{marker.name}</h2>
+          <p>
+            {spacesLeft.map((space) => {
+              return space.id === marker.id ? (
+                <span key={space.id}>剩餘車位{space.availablecar}</span>
+              ) : (
+                ''
+              );
+            })}
+            <span>/{marker.totalcar}</span>
+          </p>
+          {/* 測試刻意增加大量文字，會超過畫面 */}
           <p>{marker.payex}</p>
         </Popup>
       </Marker>
