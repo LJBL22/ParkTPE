@@ -2,6 +2,7 @@ import './App.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { parkingLot, available } from './dummyData';
 import { tw97ToWGS84 } from './utility';
+import { useMap } from './hooks';
 
 function App() {
   // 處理 safari 問題 first get the viewport height and multiple it by 1% to get a value for a vh unit
@@ -9,10 +10,7 @@ function App() {
   // then set the value in the --vh custom property to the root of the document
   document.documentElement.style.setProperty('--vh', `${vh}px`);
 
-  // 預設的中心位置：忠孝復興
-  // const defaultPosition = [25.044761, 121.536651];
-  const defaultPosition = [25.037146691182055, 121.56628039692905];
-
+  const { position } = useMap();
   // 嘗試 render dummy markers & spaces
   // 取出停車場資料
   const markers = parkingLot.data.park;
@@ -60,7 +58,7 @@ function App() {
       </nav>
       <div id='map'>
         <MapContainer
-          center={defaultPosition}
+          center={position}
           // 要搭配 bound 來安排一下
           // minZoom={10}
           zoom={15}
@@ -71,7 +69,11 @@ function App() {
             url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
           />
           {/* 設定使用者一進入畫面的位置 */}
-
+          <Marker position={position}>
+            <Popup>
+              <h2>我在這裡</h2>
+            </Popup>
+          </Marker>
           {/* 嘗試 render dummy marker */}
           {renderMarkers}
         </MapContainer>
