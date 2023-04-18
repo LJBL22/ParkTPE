@@ -3,12 +3,23 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { parkingLot, available } from './dummyData';
 import { tw97ToWGS84 } from './utility';
 import { useMap } from './hooks';
+import { useEffect } from 'react';
 
 function App() {
-  // 處理 safari 問題 first get the viewport height and multiple it by 1% to get a value for a vh unit
-  let vh = window.innerHeight * 0.01;
-  // then set the value in the --vh custom property to the root of the document
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
+  // 搭配CSS，處理 safari 特性
+  // 處理調整螢幕大小
+  useEffect(() => {
+    const handleResize = () => {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    // 添加 resize 事件監聽器
+    window.addEventListener('resize', handleResize);
+    // cleanup function: 移除 resize 事件監聽器
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const { position } = useMap();
   // 嘗試 render dummy markers & spaces
