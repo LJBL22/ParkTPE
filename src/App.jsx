@@ -1,27 +1,25 @@
 import './App.css';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { parkingLot, available } from './dummyData';
 import { tw97ToWGS84 } from './utility';
-import { useMap } from './hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useGeolocation, useCustomWindowSize } from './hooks';
 
 function App() {
-  // 搭配CSS，處理 safari 特性
-  // 處理調整螢幕大小
-  useEffect(() => {
-    const handleResize = () => {
-      let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-    // 添加 resize 事件監聽器
-    window.addEventListener('resize', handleResize);
-    // cleanup function: 移除 resize 事件監聽器
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const defaultPosition = { lat: 25.044761, lng: 121.536651 };
+  const [position, setPosition] = useState(defaultPosition);
+  useCustomWindowSize();
+  useGeolocation(position, setPosition);
 
-  const { position } = useMap();
+  function MapCenter() {
+    const map = useMap();
+    useEffect(() => {
+      map.setView(position, map.getZoom()); // 使用 setView 方法設定新的中心位置
+      console.log('map center:', map.getCenter());
+    }, [position, map]);
+    return null;
+  }
+
   // 嘗試 render dummy markers & spaces
   // 取出停車場資料
   const markers = parkingLot.data.park;
@@ -75,6 +73,7 @@ function App() {
           zoom={15}
           scrollWheelZoom={true}
         >
+          <MapCenter />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
             url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
