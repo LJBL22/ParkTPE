@@ -31,9 +31,9 @@ body {
 }
 
 .leaflet-container {
-  /* Fallback for browsers that do not support Custom Properties */
+  /* 提升兼容性＿針對沒有支援客製屬性的瀏覽器，則直接 apply 100vh */
   height: 100vh;
-  /* for Safari */
+  /* Safari，搭配 js 。 1vh 是 fallback-value，若沒有搭配 js 撰寫時則直接 apply 1vh 用以乘以 100*/
   height: calc(var(--vh, 1vh) * 100);
 }
 
