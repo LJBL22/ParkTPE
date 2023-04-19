@@ -1,9 +1,13 @@
 import './App.css';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import { tw97ToWGS84 } from './utility';
 import { useEffect, useState } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
 import { getParkingLot, getSpacesLeft } from './api';
+import { Icon } from 'leaflet';
+import carPngIcon from './assets/pin.png';
+import parkingPngIcon from './assets/parking.png';
 
 function App() {
   const defaultPosition = { lat: 25.044761, lng: 121.536651 };
@@ -45,6 +49,15 @@ function App() {
     getSpaceLeftAsync();
   }, []);
 
+  // Icon
+  const carIcon = new Icon({
+    iconUrl: carPngIcon,
+    iconSize: [60, 60],
+  });
+  const parkingIcon = new Icon({
+    iconUrl: parkingPngIcon,
+    iconSize: [38, 38],
+  });
   // render 每一筆資料
   const renderMarkers = parkingLot.map((marker) => {
     // 取值轉換 marker 的經緯度：將取出的值定義變數 x y
@@ -59,7 +72,7 @@ function App() {
     // 取出剩餘車位資料
     // 如果 spacesLeft 裡面的每筆資料 (index) 的 id 跟 掃描 markers 裡面的每筆資料 (index) 的 id，相符，則取出 availablecar 的值。
     return (
-      <Marker key={marker.id} position={markerPosition}>
+      <Marker key={marker.id} position={markerPosition} icon={parkingIcon}>
         <Popup>
           <h2>{marker.name}</h2>
           <p>
@@ -98,13 +111,15 @@ function App() {
             url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
           />
           {/* 設定使用者一進入畫面的位置 */}
-          <Marker position={position}>
+          <Marker position={position} icon={carIcon}>
             <Popup>
               <h2>我在這裡</h2>
             </Popup>
           </Marker>
-          {/* render api markers */}
-          {renderMarkers}
+          <MarkerClusterGroup chunkedLoading>
+            {/* render api markers */}
+            {renderMarkers}
+          </MarkerClusterGroup>
         </MapContainer>
       </div>
     </>
