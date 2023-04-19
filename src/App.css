@@ -43,8 +43,8 @@ body {
   top: 0;
   text-align: end;
   width: 100%;
-  height: 6vh;
-  line-height: 6vh;
+  height: 3rem;
+  line-height: 3rem;
   z-index: 524;
   color: var(--color-theme);
   background-color: var(--color-dark);
