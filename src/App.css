@@ -49,3 +49,8 @@ body {
   color: var(--color-theme);
   background-color: var(--color-dark);
 }
+
+.leaflet-top.leaflet-left {
+  margin-top: 4rem;
+  margin-left: 1rem;
+}
