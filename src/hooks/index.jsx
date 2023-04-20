@@ -9,7 +9,6 @@ export const useGeolocation = (position, setPosition) => {
         // 如果同意則抓取定位
         ({ coords }) => {
           setPosition({ lat: coords.latitude, lng: coords.longitude });
-          console.log('Current Position allowed');
         },
         // 如果阻擋則取 IP 位置
         (blocked) => {

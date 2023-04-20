@@ -16,6 +16,8 @@ export const getParkingLot = async () => {
 export const getSpacesLeft = async () => {
   try {
     const res = await axios.get(spacesLeftUrl)
+    // 檢查用待刪除
+    console.log(res.data.data.UPDATETIME)
     const data = res.data.data.park
     return data
   } catch {
