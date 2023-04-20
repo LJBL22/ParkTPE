@@ -1,5 +1,5 @@
-import './App.css';
 import 'leaflet/dist/leaflet.css';
+import './App.css';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { tw97ToWGS84 } from './utility';
@@ -60,38 +60,41 @@ function App() {
     iconSize: [38, 38],
   });
   // render 每一筆資料
-  const renderMarkers = parkingLot.map((marker) => {
-    // 取值轉換 marker 的經緯度：將取出的值定義變數 x y
-    const { tw97x: x, tw97y: y } = marker;
-    // 引入函式轉換 WGS84
-    const WGS84 = tw97ToWGS84(x, y);
-    // 物件取值經緯度（為數字）
-    const { lat, lng } = WGS84;
-    // 定義該 marker 的 position
-    const markerPosition = [lat, lng];
+  const renderMarkers = parkingLot
+    // 篩掉非汽車的停車場
+    .filter((marker) => marker.totalcar > 0)
+    .map((marker) => {
+      // 取值轉換 marker 的經緯度：將取出的值定義變數 x y
+      const { tw97x: x, tw97y: y } = marker;
+      // 引入函式轉換 WGS84
+      const WGS84 = tw97ToWGS84(x, y);
+      // 物件取值經緯度（為數字）
+      const { lat, lng } = WGS84;
+      // 定義該 marker 的 position
+      const markerPosition = [lat, lng];
 
-    // 取出剩餘車位資料
-    // 如果 spacesLeft 裡面的每筆資料 (index) 的 id 跟 掃描 markers 裡面的每筆資料 (index) 的 id，相符，則取出 availablecar 的值。
-    return (
-      <Marker key={marker.id} position={markerPosition} icon={parkingIcon}>
-        <Popup>
-          <h2>{marker.name}</h2>
-          <p>
-            {spaceLeft.map((space) => {
-              return space.id === marker.id ? (
-                <span key={space.id}>剩餘車位{space.availablecar}</span>
-              ) : (
-                ''
-              );
-            })}
-            <span>/{marker.totalcar}</span>
-          </p>
-          {/* 測試刻意增加大量文字，會超過畫面 */}
-          <p>{marker.payex}</p>
-        </Popup>
-      </Marker>
-    );
-  });
+      // 取出剩餘車位資料
+      // 如果 spacesLeft 裡面的每筆資料 (index) 的 id 跟 掃描 markers 裡面的每筆資料 (index) 的 id，相符，則取出 availablecar 的值。
+      return (
+        <Marker key={marker.id} position={markerPosition} icon={parkingIcon}>
+          <Popup>
+            <h2>{marker.name}</h2>
+            <p>
+              {spaceLeft.map((space) => {
+                return space.id === marker.id ? (
+                  <span key={space.id}>剩餘車位{space.availablecar}</span>
+                ) : (
+                  ''
+                );
+              })}
+              <span>/{marker.totalcar}</span>
+            </p>
+            {/* 測試刻意增加大量文字，會超過畫面 */}
+            <p>{marker.payex}</p>
+          </Popup>
+        </Marker>
+      );
+    });
 
   return (
     <>
