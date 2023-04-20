@@ -9,6 +9,8 @@ import { getParkingLot, getSpacesLeft } from './api';
 import { Icon } from 'leaflet';
 import carPngIcon from './assets/pin.png';
 import parkingPngIcon from './assets/parking.png';
+// import styled from 'styled-components';
+import { CustomPopup } from './Components/CustomPopup';
 
 function App() {
   const defaultPosition = { lat: 25.044761, lng: 121.536651 };
@@ -116,9 +118,23 @@ function App() {
           />
           {/* 設定使用者一進入畫面的位置 */}
           <Marker position={position} icon={carIcon}>
-            <Popup>
+            {/* <Popup>
               <h2>我在這裡</h2>
-            </Popup>
+            </Popup> */}
+            {/* 客製化 popup marker */}
+            <CustomPopup
+              available='30'
+              totalCar='100'
+              title='停車場名字'
+              address='台北市忠孝東路走九遍'
+              tel='02-30030042'
+              serviceTime='00:00~24:00'
+              fare='40'
+              summary='Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  Eligendi quisquam impedit, inventore obcaecati voluptatibus,
+                  tempore labore quaerat dignissimos hic, fuga delectus! Cumque
+                  doloremque, quisquam praesentium error in unde? Culpa, dolore!'
+            />
           </Marker>
           <MarkerClusterGroup chunkedLoading>
             {/* render api markers */}
