@@ -10,24 +10,31 @@ const StyledPop = styled(Popup)`
       width: 100%;
       border-radius: 12px;
       text-align: center;
-    }
-    .parkingLotTitle {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin: 0.5rem 0 1rem 0;
-    }
-    span.available {
-      font-size: 3rem;
+      span.available {
+        font-size: 3rem;
+      }
+      .noAvailableData {
+        font-size: 1.25rem;
+        padding: 1rem 1rem 0 1rem;
+      }
+      .parkName {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0.5rem 0.5rem 1rem;
+      }
     }
     .card-mid {
       display: flex;
       width: 100%;
-      flex: 1;
       justify-content: space-between;
+      align-items: center;
       padding: 1rem 0 0 0;
-      ul > li {
-        text-align: left;
-        list-style: none;
+      .info {
+        width: 75%;
+        ul > li {
+          text-align: left;
+          list-style: none;
+        }
       }
       .circle {
         width: 3.5rem;
@@ -42,30 +49,43 @@ const StyledPop = styled(Popup)`
         }
       }
     }
+    .card-bottom {
+      p {
+        margin: 1.3em 0 0;
+      }
+    }
   }
 `;
 
-export const CustomPopup = ({
+export default function CustomPopup({
   available,
-  totalCar,
-  title,
+  totalcar,
+  name,
   address,
   tel,
   serviceTime,
   fare,
   summary,
-}) => {
+  payex,
+}) {
   return (
     <StyledPop>
       <div className='card-top'>
-        <div className='spacesLeft'>
-          <span className='available'>{available}</span>
-          <span className='totalCar'>/{totalCar}</span>
-        </div>
-        <p className='parkingLotTitle'>{title}</p>
+        {available > 0 ? (
+          <div className='availableData'>
+            <span>剩餘</span>
+            <span className='available'>{available}</span>
+            <span className='totalCar'>/{totalcar}</span>
+          </div>
+        ) : (
+          <div className='noAvailableData'>
+            <span>總計車位{totalcar}</span>
+          </div>
+        )}
+        <p className='parkName'>{name}</p>
       </div>
       <div className='card-mid'>
-        <div>
+        <div className='info'>
           <ul>
             <li>地址：{address}</li>
             <li>電話：{tel}</li>
@@ -79,7 +99,8 @@ export const CustomPopup = ({
       </div>
       <div className='card-bottom'>
         <p className='summary'>{summary}</p>
+        <p className='payex'>{payex}</p>
       </div>
     </StyledPop>
   );
-};
+}
