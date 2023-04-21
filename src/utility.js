@@ -1,3 +1,7 @@
+import { Icon } from 'leaflet';
+import carPngIcon from './assets/pin.png';
+import parkingPngIcon from './assets/parking.png';
+
 // attribute: kuro.tw
 function twd97_to_latlng($x, $y) {
   var pow = Math.pow, M_PI = Math.PI;
@@ -49,4 +53,15 @@ function twd97_to_latlng($x, $y) {
   }
 }
 
-export { twd97_to_latlng as tw97ToWGS84 } 
+// Icon
+const carIcon = new Icon({
+  iconUrl: carPngIcon,
+  iconSize: [60, 60],
+});
+const parkingIcon = new Icon({
+  iconUrl: parkingPngIcon,
+  iconSize: [38, 38],
+});
+
+export { twd97_to_latlng as tw97ToWGS84, carIcon, parkingIcon, }
+
