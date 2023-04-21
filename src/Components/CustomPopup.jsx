@@ -87,9 +87,9 @@ export default function CustomPopup({
       <div className='card-mid'>
         <div className='info'>
           <ul>
-            <li>地址：{address}</li>
-            <li>電話：{tel}</li>
-            <li>營業時間：{serviceTime}</li>
+            {address && <li>地址：{address}</li>}
+            {tel && <li>電話：{tel}</li>}
+            {serviceTime && <li>營業時間：{serviceTime}</li>}
           </ul>
         </div>
         <div className='circle'>
@@ -98,8 +98,8 @@ export default function CustomPopup({
         </div>
       </div>
       <div className='card-bottom'>
-        <p className='summary'>{summary}</p>
-        <p className='payex'>{payex}</p>
+        {summary && <p className='summary'>{summary}</p>}
+        {payex && <p className='payex'>{payex}</p>}
       </div>
     </StyledPop>
   );
