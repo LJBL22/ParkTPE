@@ -41,11 +41,24 @@ function App() {
       try {
         const apiSpaceLeft = await getSpacesLeft();
         setSpaceLeft(apiSpaceLeft);
+        // 檢查用，待刪除
+        console.log(apiSpaceLeft);
       } catch (error) {
         console.error('[get spaceLeft failed]', error);
       }
     };
     getSpaceLeftAsync();
+  }, []);
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      // call API and update state
+      const spacesLeftUpdated = await getSpacesLeft();
+      setSpaceLeft(spacesLeftUpdated);
+      // 檢查用，待刪除
+      console.log(spacesLeftUpdated);
+    }, 120000); //該 API 實際的更新時間為每 2 分鐘一次
+    // Clear interval on unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   // render 每一筆資料
