@@ -34,6 +34,8 @@ export const useGeolocation = (position, setPosition) => {
 };
 
 export const useCustomWindowSize = () => {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
   // 搭配CSS，處理 safari 特性
   // 處理調整螢幕大小
   useEffect(() => {
