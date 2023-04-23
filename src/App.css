@@ -38,21 +38,17 @@ li {
 }
 
 .leaflet-container {
-  /* 提升兼容性＿針對沒有支援客製屬性的瀏覽器，則直接 apply 100vh */
   height: 100vh;
-  /* Safari，搭配 js 。 1vh 是 fallback-value，若沒有搭配 js 撰寫時則直接 apply 1vh 用以乘以 100*/
-  height: calc(var(--vh, 1vh) * 100);
-  font-family: 'Kanit', 'Noto Sans TC', sans-serif;
+  /* mobile: iPhone 12 pro */
+  height: calc(var(--vh, 1vh) * 88 - 2.5rem);
 }
 
 .nav-top {
   padding: 0 3.5rem;
-  position: absolute;
-  top: 0;
   text-align: end;
   width: 100%;
-  height: 3rem;
-  line-height: 3rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
   z-index: 524;
   color: var(--color-theme);
   background-color: var(--color-dark);
@@ -61,4 +57,15 @@ li {
 .leaflet-top.leaflet-left {
   margin-top: 4rem;
   margin-left: 1rem;
+}
+
+/* edge: 443, firefox: 450, chrome: 500, safari: 574*/
+/* ipad: 731/695(tab)*1180 */
+@media screen and (min-width: 443px) {
+  /* 提升兼容性＿針對沒有支援客製屬性的瀏覽器，則直接 apply 100vh */
+  .leaflet-container {
+    height: 100vh;
+    /* Safari，搭配 js 。 1vh 是 fallback-value，若沒有搭配 js 撰寫時則直接 apply 1vh 用以乘以 100*/
+    height: calc(var(--vh, 1vh) * 100 - 2.5rem);
+  }
 }
