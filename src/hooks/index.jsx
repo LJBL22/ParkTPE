@@ -3,34 +3,42 @@ import axios from 'axios';
 
 export const useGeolocation = (position, setPosition) => {
   useEffect(() => {
+    let watcher = null;
+    // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
     if ('geolocation' in navigator) {
       // 呼叫 navigator.geoLocation
-      navigator.geolocation.getCurrentPosition(
+      watcher = navigator.geolocation.watchPosition(
         // 如果同意則抓取定位
         ({ coords }) => {
           setPosition({ lat: coords.latitude, lng: coords.longitude });
         },
-        // 如果阻擋則取 IP 位置
-        (blocked) => {
-          if (blocked) {
+        // 處理錯誤
+        (error) => {
+          console.error('Error:', error);
+          // 如果阻擋則取 IP 位置
+          if (error.code === error.PERMISSION_DENIED) {
             const fetch = async () => {
               try {
                 const { data } = await axios.get('https://ipapi.co/json');
                 setPosition({ lat: data.latitude, lng: data.longitude });
               } catch (error) {
-                console.error('[blocked and get api failed]', error);
+                console.error('[blocked and get IPApi failed]', error);
               }
             };
             fetch();
           }
-        },
-        // 處理錯誤
-        (error) => {
-          console.log('Error:', error);
         }
       );
+      // 測試用，待刪除
+      console.log(position);
     }
-  }, []);
+    // 釋放記憶體空間、避免佔用資源
+    return () => {
+      if (watcher) {
+        navigator.geolocation.clearWatch(watcher);
+      }
+    };
+  }, [setPosition]);
 };
 
 export const useCustomWindowSize = () => {
