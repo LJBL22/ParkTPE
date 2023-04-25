@@ -23,36 +23,37 @@ const StyledPop = styled(Popup)`
         margin: 0.5rem 0.5rem 1rem;
       }
     }
-    .card-mid {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 0 0 0;
-      .info {
-        width: 75%;
-        ul > li {
-          text-align: left;
-          list-style: none;
-        }
-      }
-      .circle {
-        width: 3.5rem;
-        height: 3.5rem;
-        border-radius: 50%;
-        background-color: var(--color-theme);
-        text-align: center;
-        .fare {
-          vertical-align: middle;
-          line-height: 3.5rem;
-          font-size: 1.5rem;
-        }
-      }
-    }
     .card-bottom {
       p {
         margin: 1.3em 0 0;
       }
+    }
+  }
+`;
+
+const StyledCardMid = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0 0 0;
+  .info {
+    width: ${({ width }) => width};
+    ul > li {
+      text-align: left;
+      list-style: none;
+    }
+  }
+  .circle {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: var(--color-theme);
+    text-align: center;
+    .fare {
+      vertical-align: middle;
+      line-height: 3.5rem;
+      font-size: 1.5rem;
     }
   }
 `;
@@ -64,7 +65,7 @@ export default function CustomPopup({
   address,
   tel,
   serviceTime,
-  fare,
+  FareInfo,
   summary,
   payex,
 }) {
@@ -84,19 +85,31 @@ export default function CustomPopup({
         )}
         <p className='parkName'>{name}</p>
       </div>
-      <div className='card-mid'>
-        <div className='info'>
-          <ul>
-            {address && <li>地址：{address}</li>}
-            {tel && <li>電話：{tel}</li>}
-            {serviceTime && <li>營業時間：{serviceTime}</li>}
-          </ul>
-        </div>
-        <div className='circle'>
-          <span className='fare'>{fare}</span>
-          <span>/時</span>
-        </div>
-      </div>
+      {FareInfo.WorkingDay ? (
+        <StyledCardMid width='75%'>
+          <div className='info'>
+            <ul>
+              {address && <li>地址：{address}</li>}
+              {tel && <li>電話：{tel}</li>}
+              {serviceTime && <li>營業時間：{serviceTime}</li>}
+            </ul>
+          </div>
+          <div className='circle'>
+            <span className='fare'>{FareInfo.WorkingDay[0].Fare}</span>
+            <span>/時</span>
+          </div>
+        </StyledCardMid>
+      ) : (
+        <StyledCardMid width='100%'>
+          <div className='info'>
+            <ul>
+              {address && <li>地址：{address}</li>}
+              {tel && <li>電話：{tel}</li>}
+              {serviceTime && <li>營業時間：{serviceTime}</li>}
+            </ul>
+          </div>
+        </StyledCardMid>
+      )}
       <div className='card-bottom'>
         {summary && <p className='summary'>{summary}</p>}
         {payex && <p className='payex'>{payex}</p>}
