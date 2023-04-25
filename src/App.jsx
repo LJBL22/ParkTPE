@@ -31,7 +31,7 @@ function App() {
         const apiMarkers = await getParkingLot();
         setParkingLot(apiMarkers);
       } catch (error) {
-        console.error('[get parkingLot data failed]', error);
+        console.error(error);
       }
     };
     getParkingLotDataAsync();
@@ -41,10 +41,8 @@ function App() {
       try {
         const apiSpaceLeft = await getSpacesLeft();
         setSpaceLeft(apiSpaceLeft);
-        // 檢查用，待刪除
-        console.log(apiSpaceLeft);
       } catch (error) {
-        console.error('[get spaceLeft failed]', error);
+        console.error(error);
       }
     };
     getSpaceLeftAsync();
@@ -52,10 +50,12 @@ function App() {
   useEffect(() => {
     const intervalId = setInterval(async () => {
       // call API and update state
-      const spacesLeftUpdated = await getSpacesLeft();
-      setSpaceLeft(spacesLeftUpdated);
-      // 檢查用，待刪除
-      console.log(spacesLeftUpdated);
+      try {
+        const spacesLeftUpdated = await getSpacesLeft();
+        setSpaceLeft(spacesLeftUpdated);
+      } catch (error) {
+        console.error('[Interval fetching spacesLeft failed]: ', error);
+      }
     }, 120000); //該 API 實際的更新時間為每 2 分鐘一次
     // Clear interval on unmount
     return () => clearInterval(intervalId);

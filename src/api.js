@@ -9,18 +9,16 @@ export const getParkingLot = async () => {
     const res = await axios.get(parkingLotUrl)
     const data = res.data.data.park
     return data
-  } catch {
-    console.error('[Get parking lots failed]: ', error);
+  } catch (error) {
+    console.error('[Get API: parkingLot failed]: ', error);
   }
 }
 export const getSpacesLeft = async () => {
   try {
     const res = await axios.get(spacesLeftUrl)
-    // 檢查用待刪除
-    console.log(res.data.data.UPDATETIME)
     const data = res.data.data.park
     return data
-  } catch {
+  } catch (error) {
     console.error('[Get left-spaces failed]: ', error);
   }
 }
