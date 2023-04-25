@@ -20,11 +20,11 @@ The new skills I utilized in this side project include:
 ![popup-info](/public/popup-info.png)
 
 ## :blue_car: Features:
-        - Displays nearby parking lots on the map based on the user's GPS location
-        - Allow users to click on a parking lot to see how many parking spaces are available
-        - Allow users to move the map to view parking lots outside of their current location
-        - Provide details of the parking lot
-        - Supports desktop, tablet, and mobile devices.
+1. Displays nearby parking lots on the map based on the user's GPS location
+2. Allow users to click on a parking lot to see how many parking spaces are available
+3. Allow users to move the map to view parking lots outside of their current location
+4. Provide details of the parking lot
+5. Supports desktop, tablet, and mobile devices.
 
 ## :truck: Installation
 
