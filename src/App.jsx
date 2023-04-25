@@ -78,7 +78,7 @@ function App() {
       //展開同名 props
       return (
         <Marker key={marker.id} position={markerPosition} icon={parkingIcon}>
-          <CustomPopup available={availableCar} fare='40' {...marker} />
+          <CustomPopup available={availableCar} {...marker} />
         </Marker>
       );
     });
