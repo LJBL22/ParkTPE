@@ -5,7 +5,7 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import { carIcon, parkingIcon, tw97ToWGS84 } from './utility';
 import { useEffect, useState } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
-import { getParkingLot, getSpacesLeft } from './api';
+import { getParkingLot, getSpacesLeft } from './api/parkingLot';
 import CustomPopup from './Components/CustomPopup';
 
 function App() {
