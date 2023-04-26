@@ -3,7 +3,6 @@ import axios from "axios";
 const parkingLotUrl = 'https://tcgbusfs.blob.core.windows.net/blobtcmsv/TCMSV_alldesc.json'
 const spacesLeftUrl = 'https://tcgbusfs.blob.core.windows.net/blobtcmsv/TCMSV_allavailable.json'
 
-
 export const getParkingLot = async () => {
   try {
     const res = await axios.get(parkingLotUrl)
