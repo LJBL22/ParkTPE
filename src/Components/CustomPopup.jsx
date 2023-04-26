@@ -68,7 +68,12 @@ export default function CustomPopup({
   FareInfo,
   summary,
   payex,
+  holiday,
 }) {
+  // console.log(FareInfo); //原始的資料物件
+  // console.log(FareInfo.Holiday); //由此可知 91 行是正確判斷、繼續保留
+  // console.log(FareInfo.WorkingDay[0].Fare);
+  // console.log(holiday) //印出 數百 個false
   return (
     <StyledPop>
       <div className='card-top'>
@@ -95,7 +100,9 @@ export default function CustomPopup({
             </ul>
           </div>
           <div className='circle'>
-            <span className='fare'>{FareInfo.WorkingDay[0].Fare}</span>
+            <span className='fare'>
+              {holiday ? FareInfo.Holiday[0].Fare : FareInfo.WorkingDay[0].Fare}
+            </span>
             <span>/時</span>
           </div>
         </StyledCardMid>
