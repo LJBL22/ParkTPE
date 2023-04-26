@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
 import { getParkingLot, getSpacesLeft } from './api/parkingLot';
 import CustomPopup from './Components/CustomPopup';
+import { date, getTaiwanCalender } from './api/calendar';
 
 function App() {
   const defaultPosition = { lat: 25.044761, lng: 121.536651 };
@@ -15,6 +16,21 @@ function App() {
   const [spaceLeft, setSpaceLeft] = useState([]);
   useCustomWindowSize();
   useGeolocation(position, setPosition);
+  const [holiday, setHoliday] = useState(null);
+
+  // get calendar
+  useEffect(() => {
+    const getCalendarAsync = async () => {
+      try {
+        const apiTaiwanCalendar = await getTaiwanCalender();
+        const { isHoliday } = apiTaiwanCalendar.find((d) => d.date === date);
+        setHoliday(isHoliday);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getCalendarAsync();
+  }, []);
 
   function MapCenter() {
     const map = useMap();
@@ -73,12 +89,18 @@ function App() {
       const markerPosition = [lat, lng];
 
       // 取出剩餘車位資料
-      const space = spaceLeft.find((s) => s.id === marker.id); // 比對 id 找出符合的 spaceLeft 元素
+      const space = spaceLeft.find((s) => s.id === marker.id); // 比對 id
       const availableCar = space ? space.availablecar : null; // 符合則取值
+      const FareInfo = marker.FareInfo;
       //展開同名 props
       return (
         <Marker key={marker.id} position={markerPosition} icon={parkingIcon}>
-          <CustomPopup available={availableCar} {...marker} />
+          <CustomPopup
+            holiday={holiday}
+            available={availableCar}
+            fare={FareInfo}
+            {...marker}
+          />
         </Marker>
       );
     });
@@ -86,16 +108,10 @@ function App() {
   return (
     <>
       <nav className='nav-top'>
-        <h1>ParkTPE</h1>
+        <h1>Park&#x1F17F;TPE</h1>
       </nav>
       <div id='map'>
-        <MapContainer
-          center={position}
-          // 要搭配 bound 來安排一下
-          // minZoom={10}
-          zoom={16}
-          scrollWheelZoom={true}
-        >
+        <MapContainer center={position} zoom={16} scrollWheelZoom={true}>
           <MapCenter />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'

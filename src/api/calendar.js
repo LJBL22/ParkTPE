@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const today = new Date()
 const year = today.getFullYear()
 
@@ -11,17 +10,12 @@ const month = () => {
   return doubleDigit < 10 ? `0${doubleDigit}` : doubleDigit
 }
 
-const date = `${today.getFullYear()}${month()}${today.getDate()}`
-// 檢查用，待刪除
-console.log(date)
+export const date = `${today.getFullYear()}${month()}${today.getDate()}`
 
 export const getTaiwanCalender = async () => {
   try {
     const res = await axios.get(TaiwanCalenderUrl)
     const data = res.data
-    // const test = res.data[115].date
-    // console.log(test)
-    console.log(data)
     return data
   } catch (error) {
     console.error('[Get Taiwan Calendar failed]: ', error);
