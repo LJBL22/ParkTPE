@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import axios from 'axios';
 
-export const useGeolocation = (position, setPosition) => {
+export const useGeolocation = (position, setPosition, setCenterPosition) => {
+  const isFirstTime = useRef(true);
   useEffect(() => {
     let watcher = null;
     // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
@@ -11,6 +12,10 @@ export const useGeolocation = (position, setPosition) => {
         // 如果同意則抓取定位
         ({ coords }) => {
           setPosition({ lat: coords.latitude, lng: coords.longitude });
+          if (isFirstTime.current) {
+            setCenterPosition({ lat: coords.latitude, lng: coords.longitude });
+            isFirstTime.current = false;
+          }
         },
         // 處理錯誤
         (error) => {
@@ -21,6 +26,13 @@ export const useGeolocation = (position, setPosition) => {
               try {
                 const { data } = await axios.get('https://ipapi.co/json');
                 setPosition({ lat: data.latitude, lng: data.longitude });
+                if (isFirstTime.current) {
+                  setCenterPosition({
+                    lat: data.latitude,
+                    lng: data.longitude,
+                  });
+                  isFirstTime.current = false;
+                }
               } catch (error) {
                 console.error('[blocked and get IPApi failed]', error);
               }
@@ -29,8 +41,6 @@ export const useGeolocation = (position, setPosition) => {
           }
         }
       );
-      // 測試用，待刪除
-      console.log(position);
     }
     // 釋放記憶體空間、避免佔用資源
     return () => {
@@ -38,7 +48,7 @@ export const useGeolocation = (position, setPosition) => {
         navigator.geolocation.clearWatch(watcher);
       }
     };
-  }, [setPosition]);
+  }, [setPosition, setCenterPosition]);
 };
 
 export const useCustomWindowSize = () => {

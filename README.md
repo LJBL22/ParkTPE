@@ -1,6 +1,9 @@
-# Park&#x1F17F;TPE 
+# Park&#x1F17F;TPE
+
 ### :red_car: A Comprehensive Map for Web and Mobile
+
 The new skills I utilized in this side project include:
+
 - Using a third-party API provided by the government.
 - Integrating with third-party map services, such as OSM (OpenStreetMap).
 - Learning GIS application-related skills.
@@ -20,8 +23,9 @@ The new skills I utilized in this side project include:
 ![popup-info](/public/popup-info.png)
 
 ## :blue_car: Features:
+
 1. Displays nearby parking lots on the map based on the user's GPS location
-2. Allow users to click on a parking lot to see how many parking spaces are available
+2. Display available parking spaces on click, or the total number of spaces if unavailable via API.
 3. Allow users to move the map to view parking lots outside of their current location
 4. Provide details of the parking lot
 5. Supports desktop, tablet, and mobile devices.
@@ -57,4 +61,3 @@ Start the project
 ```
 npm run dev
 ```
-

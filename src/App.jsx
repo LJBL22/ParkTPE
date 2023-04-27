@@ -10,20 +10,28 @@ import CustomPopup from './Components/CustomPopup';
 
 function App() {
   const defaultPosition = { lat: 25.044761, lng: 121.536651 };
+  // for marker
   const [position, setPosition] = useState(defaultPosition);
+  //for center 將 marker 的位置跟畫面中心的位置拆開
+  const [centerPosition, setCenterPosition] = useState(defaultPosition);
   const [parkingLot, setParkingLot] = useState([]);
   const [spaceLeft, setSpaceLeft] = useState([]);
   useCustomWindowSize();
-  useGeolocation(position, setPosition);
+  useGeolocation(position, setPosition, setCenterPosition);
 
   function MapCenter() {
     const map = useMap();
     useEffect(() => {
-      map.setView(position, map.getZoom()); // 使用 setView 方法設定新的中心位置
-    }, [position, map]);
+      map.setView(centerPosition, map.getZoom()); // 使用 setView 方法設定新的中心位置
+      // 檢視用 可知一直瘋狂在渲染...
+      console.log('MapCenter rendered');
+    }, []);
     return null;
   }
 
+  function handleButtonClick() {
+    setCenterPosition(position);
+  }
   // get API data
   useEffect(() => {
     const getParkingLotDataAsync = async () => {
@@ -90,13 +98,15 @@ function App() {
       </nav>
       <div id='map'>
         <MapContainer
-          center={position}
+          center={centerPosition}
           // 要搭配 bound 來安排一下
           // minZoom={10}
           zoom={16}
           scrollWheelZoom={true}
         >
+          {/* {isInitialLocation &&  */}
           <MapCenter />
+          {/* // } */}
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
             url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
@@ -107,6 +117,7 @@ function App() {
               <h2>👋🏻 我在這裡</h2>
             </Popup>
           </Marker>
+          <button onClick={handleButtonClick}>設為中心</button>
           <MarkerClusterGroup chunkedLoading>
             {/* render api markers */}
             {renderMarkers}
