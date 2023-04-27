@@ -29,8 +29,6 @@ export const useGeolocation = (position, setPosition) => {
           }
         }
       );
-      // 測試用，待刪除
-      console.log(position);
     }
     // 釋放記憶體空間、避免佔用資源
     return () => {

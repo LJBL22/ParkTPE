@@ -1,5 +1,12 @@
 import { Popup } from 'react-leaflet';
 import styled from 'styled-components';
+import {
+  LocalPhoneRounded,
+  MapRounded,
+  AccessTimeFilledRounded,
+  InfoOutlined,
+  PaidOutlined,
+} from '@mui/icons-material';
 const StyledPop = styled(Popup)`
   .leaflet-popup-content {
     display: flex;
@@ -30,28 +37,27 @@ const StyledPop = styled(Popup)`
       align-items: center;
       padding: 1rem 0 0 0;
       .info {
-        width: 75%;
+        width: 100%;
         ul > li {
           text-align: left;
           list-style: none;
-        }
-      }
-      .circle {
-        width: 3.5rem;
-        height: 3.5rem;
-        border-radius: 50%;
-        background-color: var(--color-theme);
-        text-align: center;
-        .fare {
-          vertical-align: middle;
-          line-height: 3.5rem;
-          font-size: 1.5rem;
+          svg {
+            vertical-align: text-bottom;
+            width: 1rem;
+            height: 1rem;
+          }
         }
       }
     }
     .card-bottom {
       p {
-        margin: 1.3em 0 0;
+        margin: 1.1em 0 0;
+        font-size: 1rem;
+        svg {
+          vertical-align: text-bottom;
+          width: 1.25rem;
+          height: 1.25rem;
+        }
       }
     }
   }
@@ -64,7 +70,6 @@ export default function CustomPopup({
   address,
   tel,
   serviceTime,
-  fare,
   summary,
   payex,
 }) {
@@ -87,19 +92,40 @@ export default function CustomPopup({
       <div className='card-mid'>
         <div className='info'>
           <ul>
-            {address && <li>地址：{address}</li>}
-            {tel && <li>電話：{tel}</li>}
-            {serviceTime && <li>營業時間：{serviceTime}</li>}
+            {address && (
+              <li>
+                <MapRounded />
+                &ensp;{address}
+              </li>
+            )}
+            {tel && (
+              <li>
+                <LocalPhoneRounded />
+                &ensp;{tel}
+              </li>
+            )}
+            {serviceTime && (
+              <li>
+                <AccessTimeFilledRounded />
+                &ensp;{serviceTime}
+              </li>
+            )}
           </ul>
-        </div>
-        <div className='circle'>
-          <span className='fare'>{fare}</span>
-          <span>/時</span>
         </div>
       </div>
       <div className='card-bottom'>
-        {summary && <p className='summary'>{summary}</p>}
-        {payex && <p className='payex'>{payex}</p>}
+        {summary && (
+          <p className='summary'>
+            <InfoOutlined />
+            &ensp;{summary}
+          </p>
+        )}
+        {payex && (
+          <p className='payex'>
+            <PaidOutlined />
+            &ensp;{payex}
+          </p>
+        )}
       </div>
     </StyledPop>
   );

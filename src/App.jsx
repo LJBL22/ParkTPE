@@ -19,7 +19,7 @@ function App() {
   function MapCenter() {
     const map = useMap();
     useEffect(() => {
-      map.setView(position, map.getZoom()); // 使用 setView 方法設定新的中心位置
+      map.setView(position, map.getZoom()); // 使用 setView 方法設定中心位置
     }, [position, map]);
     return null;
   }
@@ -78,7 +78,7 @@ function App() {
       //展開同名 props
       return (
         <Marker key={marker.id} position={markerPosition} icon={parkingIcon}>
-          <CustomPopup available={availableCar} fare='40' {...marker} />
+          <CustomPopup available={availableCar} {...marker} />
         </Marker>
       );
     });
@@ -86,22 +86,16 @@ function App() {
   return (
     <>
       <nav className='nav-top'>
-        <h1>ParkTPE</h1>
+        <h1>Park&#x1F17F;TPE</h1>
       </nav>
       <div id='map'>
-        <MapContainer
-          center={position}
-          // 要搭配 bound 來安排一下
-          // minZoom={10}
-          zoom={16}
-          scrollWheelZoom={true}
-        >
+        <MapContainer center={position} zoom={16} scrollWheelZoom={true}>
           <MapCenter />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
             url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
           />
-          {/* 定位使用者 */}
+          {/* locate user */}
           <Marker position={position} icon={carIcon}>
             <Popup>
               <h2>👋🏻 我在這裡</h2>
