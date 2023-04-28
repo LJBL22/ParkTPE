@@ -17,9 +17,9 @@ function App() {
   useCustomWindowSize();
   const position = useGeolocation();
   const mapRef = useRef(null);
-  console.log(position);
+  // console.log(position);
 
-  useEffect(() => useGeolocation(), []);
+  // useEffect(() => useGeolocation(), []);
   // function MapCenter() {
   //   const map = useMap();
   //   useEffect(() => {

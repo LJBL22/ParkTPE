@@ -18,7 +18,6 @@ export const useGeolocation = () => {
       },
     });
     console.log('onSuccess work');
-    console.log('new position', position);
   };
 
   const onError = (error) => {
@@ -71,7 +70,7 @@ export const useGeolocation = () => {
         navigator.geolocation.clearWatch(watcher);
       }
     };
-  }, []);
+  }, [setPosition]);
   return position;
 };
 
