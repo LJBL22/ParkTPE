@@ -1,42 +1,78 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export const useGeolocation = (position, setPosition) => {
+export const useGeolocation = () => {
+  const [position, setPosition] = useState({
+    loaded: false,
+    coordinates: { lat: '', lng: '' },
+  });
+
+  // 把 success & error 從 useEffect 獨立出來撰寫較清晰
+  // onSuccess 如果同意則抓取定位
+  const onSuccess = (position) => {
+    setPosition({
+      loaded: true,
+      coordinates: {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      },
+    });
+    console.log('onSuccess work');
+    console.log('new position', position);
+  };
+
+  const onError = (error) => {
+    setPosition({
+      loaded: true,
+      error,
+    });
+  };
+
   useEffect(() => {
     let watcher = null;
+    console.log('watcher index');
     // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
-    if ('geolocation' in navigator) {
-      // 呼叫 navigator.geoLocation
-      watcher = navigator.geolocation.watchPosition(
-        // 如果同意則抓取定位
-        ({ coords }) => {
-          setPosition({ lat: coords.latitude, lng: coords.longitude });
-        },
-        // 處理錯誤
-        (error) => {
-          console.error('Error:', error);
-          // 如果阻擋則取 IP 位置
-          if (error.code === error.PERMISSION_DENIED) {
-            const fetch = async () => {
-              try {
-                const { data } = await axios.get('https://ipapi.co/json');
-                setPosition({ lat: data.latitude, lng: data.longitude });
-              } catch (error) {
-                console.error('[blocked and get IPApi failed]', error);
-              }
-            };
-            fetch();
-          }
-        }
-      );
+    if (!('geolocation' in navigator)) {
+      onError({
+        code: 0,
+        message: 'Geolocation not supported',
+      });
     }
+    // 呼叫 navigator.geoLocation
+    watcher = navigator.geolocation.watchPosition(
+      onSuccess,
+      // 處理錯誤
+      (error) => {
+        console.error('Error:', error);
+        // 如果阻擋則取 IP 位置
+        if (error.code === error.PERMISSION_DENIED) {
+          const fetch = async () => {
+            try {
+              const { data } = await axios.get('https://ipapi.co/json');
+              setPosition({
+                loaded: true,
+                coordinates: {
+                  lat: location.data.latitude,
+                  lng: location.data.longitude,
+                },
+              });
+            } catch (error) {
+              console.error('[blocked and get IPApi failed]', error);
+            }
+          };
+          fetch();
+        }
+      }
+    );
+
     // 釋放記憶體空間、避免佔用資源
     return () => {
       if (watcher) {
         navigator.geolocation.clearWatch(watcher);
       }
     };
-  }, [setPosition]);
+  }, []);
+  return position;
 };
 
 export const useCustomWindowSize = () => {

@@ -3,26 +3,68 @@ import './App.css';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { carIcon, parkingIcon, tw97ToWGS84 } from './utility';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
 import { getParkingLot, getSpacesLeft } from './api';
 import CustomPopup from './Components/CustomPopup';
 
 function App() {
-  const defaultPosition = { lat: 25.044761, lng: 121.536651 };
-  const [position, setPosition] = useState(defaultPosition);
+  // 試試看讓 center 回歸 center \不要暴力的用 position 當 center
+  const defaultCenter = { lat: 25.044761, lng: 121.536651 };
+  // const [center, setCenter] = useState(defaultCenter);
   const [parkingLot, setParkingLot] = useState([]);
   const [spaceLeft, setSpaceLeft] = useState([]);
   useCustomWindowSize();
-  useGeolocation(position, setPosition);
+  const position = useGeolocation();
+  const mapRef = useRef(null);
+  console.log(position);
 
-  function MapCenter() {
-    const map = useMap();
-    useEffect(() => {
-      map.setView(position, map.getZoom()); // 使用 setView 方法設定中心位置
-    }, [position, map]);
-    return null;
-  }
+  useEffect(() => useGeolocation(), []);
+  // function MapCenter() {
+  //   const map = useMap();
+  //   useEffect(() => {
+  //     map.setView(position, map.getZoom()); // 使用 setView 方法設定中心位置
+  //     console.log('mapcenter render(delete map dependency & position)');
+  //   }, []);
+  //   return null;
+  // }
+
+  // useEffect(() => {
+  //   if (!mapRef.current) return;
+  //   // const setMapView = async () => {
+  //   if (mapRef.current && position.loaded) {
+  //     const map = mapRef.current.leafletElement;
+  //     map.setView([position.coordinates.lat, position.coordinates.lng], 16);
+  //   }
+  //   console.log(mapRef);
+  //   console.log('setView called');
+  //   // };
+  //   // setMapView();
+  //   // console.log([position.coordinates.lat, position.coordinates.lng]);
+  // }, [mapRef, position.loaded, position.coordinates]);
+
+  // const MapCenter = () => {
+  //   const map = useMap();
+  //   if (position.loaded && !position.error) {
+  //     map.setView(
+  //       [position.coordinates.lat, position.coordinates.lng],
+  //       map.getZoom()
+  //     );
+  //     console.log('map center render');
+  //   } else {
+  //     console.log('map center no map ref');
+  //     // ;(position.error.message);
+  //   }
+  // };
+
+  const handleClick = () => {
+    console.log('object');
+  };
+
+  // useEffect(() => {
+  //   locateUser();
+  //   console.log('well?s');
+  // }, []);
 
   // get API data
   useEffect(() => {
@@ -89,18 +131,32 @@ function App() {
         <h1>Park&#x1F17F;TPE</h1>
       </nav>
       <div id='map'>
-        <MapContainer center={position} zoom={16} scrollWheelZoom={true}>
-          <MapCenter />
+        <MapContainer
+          center={defaultCenter}
+          zoom={16}
+          scrollWheelZoom={true}
+          // ref={mapRef}
+          whenCreated={(mapInstance) => {
+            mapRef.current = mapInstance;
+          }}
+        >
+          {/* <MapCenter /> */}
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
             url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
           />
           {/* locate user */}
-          <Marker position={position} icon={carIcon}>
-            <Popup>
-              <h2>👋🏻 我在這裡</h2>
-            </Popup>
-          </Marker>
+          {position.loaded && !position.error && (
+            <Marker
+              position={[position.coordinates.lat, position.coordinates.lng]}
+              icon={carIcon}
+            >
+              <Popup>
+                <h2>👋🏻 我在這裡</h2>
+              </Popup>
+            </Marker>
+          )}
+          <button onClick={handleClick}>Locate Me</button>
           <MarkerClusterGroup chunkedLoading>
             {/* render api markers */}
             {renderMarkers}
