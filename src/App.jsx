@@ -11,20 +11,97 @@ import CustomPopup from './Components/CustomPopup';
 function App() {
   // 試試看讓 center 回歸 center \不要暴力的用 position 當 center
   const defaultCenter = { lat: 25.044761, lng: 121.536651 };
-  // const [center, setCenter] = useState(defaultCenter);
+  const [center, setCenter] = useState(defaultCenter);
   const [parkingLot, setParkingLot] = useState([]);
   const [spaceLeft, setSpaceLeft] = useState([]);
   useCustomWindowSize();
-  const position = useGeolocation();
+  // const position = useGeolocation();
   const mapRef = useRef(null);
-  console.log(position);
+  const [position, setPosition] = useState({
+    loaded: false,
+    coordinates: { lat: '', lng: '' },
+  });
 
-  useEffect(() => useGeolocation(), []);
+  // 把 success & error 從 useEffect 獨立出來撰寫較清晰
+  // onSuccess 如果同意則抓取定位
+  const onSuccess = (position) => {
+    setPosition({
+      loaded: true,
+      coordinates: {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      },
+    });
+    console.log('onSuccess work');
+    console.log('new position', position);
+  };
+
+  const onError = (error) => {
+    setPosition({
+      loaded: true,
+      error,
+    });
+  };
+
+  useEffect(() => {
+    let watcher = null;
+    console.log('watcher index');
+    // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
+    if (!('geolocation' in navigator)) {
+      onError({
+        code: 0,
+        message: 'Geolocation not supported',
+      });
+    }
+    // 呼叫 navigator.geoLocation
+    watcher = navigator.geolocation.watchPosition(
+      onSuccess,
+      // 處理錯誤
+      (error) => {
+        console.error('Error:', error);
+        // 如果阻擋則取 IP 位置
+        if (error.code === error.PERMISSION_DENIED) {
+          const fetch = async () => {
+            try {
+              const { data } = await axios.get('https://ipapi.co/json');
+              setPosition({
+                loaded: true,
+                coordinates: {
+                  lat: location.data.latitude,
+                  lng: location.data.longitude,
+                },
+              });
+            } catch (error) {
+              console.error('[blocked and get IPApi failed]', error);
+            }
+          };
+          fetch();
+        }
+      }
+    );
+
+    // 釋放記憶體空間、避免佔用資源
+    return () => {
+      if (watcher) {
+        navigator.geolocation.clearWatch(watcher);
+      }
+    };
+  }, []);
+  // 最後感覺是 useMap 的問題，但...也不知道怎麼處理。只能遺憾在此了
+  const map = L.map('map');
+
+  useEffect(() => {
+    if (position.loaded) {
+      setCenter(position);
+      map.setView(center, map.getZoom()); // 使用 setView 方法設定中心位置
+      console.log('map center = position');
+    }
+  }, []);
   // function MapCenter() {
   //   const map = useMap();
   //   useEffect(() => {
   //     map.setView(position, map.getZoom()); // 使用 setView 方法設定中心位置
-  //     console.log('mapcenter render(delete map dependency & position)');
+  //     console.log('map center render');
   //   }, []);
   //   return null;
   // }
@@ -57,9 +134,9 @@ function App() {
   //   }
   // };
 
-  const handleClick = () => {
-    console.log('object');
-  };
+  // const handleClick = () => {
+  //   map.
+  // };
 
   // useEffect(() => {
   //   locateUser();
@@ -132,13 +209,13 @@ function App() {
       </nav>
       <div id='map'>
         <MapContainer
-          center={defaultCenter}
+          center={center}
           zoom={16}
           scrollWheelZoom={true}
           // ref={mapRef}
-          whenCreated={(mapInstance) => {
-            mapRef.current = mapInstance;
-          }}
+          // whenCreated={(mapInstance) => {
+          //   mapRef.current = mapInstance;
+          // }}
         >
           {/* <MapCenter /> */}
           <TileLayer
@@ -156,7 +233,7 @@ function App() {
               </Popup>
             </Marker>
           )}
-          <button onClick={handleClick}>Locate Me</button>
+          {/* <button onClick={handleClick}>Locate Me</button> */}
           <MarkerClusterGroup chunkedLoading>
             {/* render api markers */}
             {renderMarkers}
