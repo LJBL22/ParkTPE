@@ -20,9 +20,14 @@ The new skills I utilized in this side project include:
 
 ### :taxi: DEMO page [LINK](https://ljbl22.github.io/ParkTPE/)
 
-![intro](/public/intro.png)
-![geolocation](/public/geolocation.png)
-![popup-info](/public/popup-info.png)
+| desktop                                |
+| -------------------------------------- |
+| ![intro](./public/intro.png)           |
+| ![popup-info](./public/popup-info.png) |
+
+| mobile                         |                                            | tablet                         |
+| ------------------------------ | ------------------------------------------ | ------------------------------ |
+| ![mobile](./public/mobile.jpg) | ![mobile-popup](./public/mobile-popup.jpg) | ![tablet](./public/tablet.png) |
 
 ## :blue_car: Features:
 
@@ -70,4 +75,12 @@ npm run dev
 
 ## License
 
-## Acknowledgement
+This information is sourced from the [Taipei City Parking Lot Information](https://data.gov.tw/dataset/128435) on the Government Open Data Platform. The original data is licensed under the [Government Open Data License, Version 1](https://data.gov.tw/license), and the source is required to be identified as the [Government Open Data Platform](https://data.gov.tw/) in accordance with the second requirement of the third article.
+
+此資料來源為政府資料開放平台中的臺北市停車場資訊，原始資料使用政府資料開放授權條款-第 1 版授權，依照第三條第二項要求標示出處為政府資料開放平台。
+
+## Features in plan
+
+- Due to the complexity of the data structure for the FareInfo provided by the API, this feature will be completed in the near future.
+
+![fareInfo](./public/fareInfo.png)
