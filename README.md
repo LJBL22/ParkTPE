@@ -1,6 +1,6 @@
 # Park&#x1F17F;TPE
 
-### :red_car: A Comprehensive Map for Web and Mobile
+### :red_car: A Comprehensive Taipei Carpark Map for Web and Mobile
 
 The new skills I utilized in this side project include:
 
@@ -81,6 +81,6 @@ This information is sourced from the [Taipei City Parking Lot Information](https
 
 ## Features in plan
 
-- Due to the complexity of the data structure for the FareInfo provided by the API, this feature will be completed in the near future.
+- Parking fee: due to the complexity of the data structure for the FareInfo provided by the API, this feature will be completed in the near future.
 
 ![fareInfo](./public/fareInfo.png)
