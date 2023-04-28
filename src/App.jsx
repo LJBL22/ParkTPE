@@ -7,14 +7,16 @@ import { useEffect, useState } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
 import { getParkingLot, getSpacesLeft } from './api';
 import CustomPopup from './Components/CustomPopup';
+import { LocateBtn, Btn2 } from './Components/LocateBtn';
 
 function App() {
   const defaultPosition = { lat: 25.044761, lng: 121.536651 };
-  const [position, setPosition] = useState(defaultPosition);
+  // const [position, setPosition] = useState(defaultPosition);
   const [parkingLot, setParkingLot] = useState([]);
   const [spaceLeft, setSpaceLeft] = useState([]);
+  // const [clicked, setClicked] = useState(false); // 新增點擊狀態
   useCustomWindowSize();
-  useGeolocation(position, setPosition);
+  const position = useGeolocation();
 
   function MapCenter() {
     const map = useMap();
@@ -23,7 +25,14 @@ function App() {
     }, [position, map]);
     return null;
   }
-
+  function handleBtnClick() {
+    // setClicked(true);
+    console.log('click 1 time');
+    // useGeolocation(position, setPosition); // 調用 useGeolocation 更新位置
+  }
+  function handleBtn2Click() {
+    console.log('handleBtn2Click');
+  }
   // get API data
   useEffect(() => {
     const getParkingLotDataAsync = async () => {
@@ -89,7 +98,7 @@ function App() {
         <h1>Park&#x1F17F;TPE</h1>
       </nav>
       <div id='map'>
-        <MapContainer center={position} zoom={16} scrollWheelZoom={true}>
+        <MapContainer center={defaultPosition} zoom={16} scrollWheelZoom={true}>
           <MapCenter />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -106,6 +115,8 @@ function App() {
             {renderMarkers}
           </MarkerClusterGroup>
         </MapContainer>
+        <LocateBtn onClick={handleBtnClick} /> {/* 新增按鈕 */}
+        <Btn2 onClick={handleBtn2Click} /> {/* 新增按鈕 */}
       </div>
     </>
   );
