@@ -3,11 +3,10 @@ import axios from 'axios';
 
 export const useGeolocation = (position, setPosition) => {
   useEffect(() => {
-    let watcher = null;
     // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
     if ('geolocation' in navigator) {
       // 呼叫 navigator.geoLocation
-      watcher = navigator.geolocation.watchPosition(
+      navigator.geolocation.getCurrentPosition(
         // 如果同意則抓取定位
         ({ coords }) => {
           setPosition({ lat: coords.latitude, lng: coords.longitude });
@@ -30,12 +29,6 @@ export const useGeolocation = (position, setPosition) => {
         }
       );
     }
-    // 釋放記憶體空間、避免佔用資源
-    return () => {
-      if (watcher) {
-        navigator.geolocation.clearWatch(watcher);
-      }
-    };
   }, [setPosition]);
 };
 
