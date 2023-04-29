@@ -2,9 +2,9 @@ import React from 'react';
 import { MyLocationRounded } from '@mui/icons-material';
 import styled from 'styled-components';
 
-export const LocateBtn = () => {
+export const LocateBtn = ({ onClick }) => {
   return (
-    <StyledBtn>
+    <StyledBtn onClick={() => onClick?.()}>
       <MyLocationRounded />
     </StyledBtn>
   );
@@ -12,21 +12,21 @@ export const LocateBtn = () => {
 
 const StyledBtn = styled.button`
   background-color: var(--color-theme);
-  width: 2rem;
-  height: 2rem;
+  width: 1.65rem;
+  height: 1.65rem;
   position: absolute;
-  top: 200px;
-  z-index: 9999;
-  /* cursor: pointer; */
+  top: 5.25rem;
+  left: 1rem;
+  z-index: 400;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   svg {
+    fill: var(--color-dark);
     width: 2rem;
     height: 2rem;
   }
 `;
-
-const StyledBtn2 = styled(StyledBtn)`
-  top: 300px;
-`;
-export const Btn2 = () => {
-  return <StyledBtn2 />;
-};

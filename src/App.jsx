@@ -7,7 +7,8 @@ import { useEffect, useState } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
 import { getParkingLot, getSpacesLeft } from './api';
 import CustomPopup from './Components/CustomPopup';
-import { LocateBtn, Btn2 } from './Components/LocateBtn';
+import { LocateBtn } from './Components/LocateBtn';
+import axios from 'axios';
 
 function App() {
   const defaultPosition = { lat: 25.044761, lng: 121.536651 };
@@ -25,12 +26,34 @@ function App() {
     return null;
   }
   function handleBtnClick() {
-    // setClicked(true);
     console.log('click 1 time');
-    // useGeolocation(position, setPosition); // 調用 useGeolocation 更新位置
-  }
-  function handleBtn2Click() {
-    console.log('handleBtn2Click');
+    // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
+    if ('geolocation' in navigator) {
+      // 呼叫 navigator.geoLocation
+      navigator.geolocation.getCurrentPosition(
+        // 如果同意則抓取定位
+        ({ coords }) => {
+          setPosition({ lat: coords.latitude, lng: coords.longitude });
+          console.log('onSuccess');
+        },
+        // 處理錯誤
+        (error) => {
+          console.error('Error:', error);
+          // 如果阻擋則取 IP 位置
+          if (error.code === error.PERMISSION_DENIED) {
+            const fetch = async () => {
+              try {
+                const { data } = await axios.get('https://ipapi.co/json');
+                setPosition({ lat: data.latitude, lng: data.longitude });
+              } catch (error) {
+                console.error('[blocked and get IPApi failed]', error);
+              }
+            };
+            fetch();
+          }
+        }
+      );
+    }
   }
   // get API data
   useEffect(() => {
@@ -109,14 +132,7 @@ function App() {
               <h2>👋🏻 我在這裡</h2>
             </Popup>
           </Marker>
-          <LocateBtn
-            onClick={(e) => {
-              e.preventDefault();
-              handleBtnClick();
-            }}
-          />
-          {/* 新增按鈕 */}
-          <Btn2 onClick={handleBtn2Click} /> {/* 新增按鈕 */}
+          <LocateBtn onClick={handleBtnClick} />
           <MarkerClusterGroup chunkedLoading>
             {/* render api markers */}
             {renderMarkers}
