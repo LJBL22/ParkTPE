@@ -16,7 +16,7 @@ function App() {
   const [parkingLot, setParkingLot] = useState([]);
   const [spaceLeft, setSpaceLeft] = useState([]);
   useCustomWindowSize();
-  useGeolocation(position, setPosition);
+  useGeolocation(setPosition);
 
   function MapCenter() {
     const map = useMap();
@@ -26,7 +26,6 @@ function App() {
     return null;
   }
   function handleBtnClick() {
-    console.log('click 1 time');
     // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
     if ('geolocation' in navigator) {
       // 呼叫 navigator.geoLocation
@@ -34,7 +33,6 @@ function App() {
         // 如果同意則抓取定位
         ({ coords }) => {
           setPosition({ lat: coords.latitude, lng: coords.longitude });
-          console.log('onSuccess');
         },
         // 處理錯誤
         (error) => {
@@ -46,7 +44,7 @@ function App() {
                 const { data } = await axios.get('https://ipapi.co/json');
                 setPosition({ lat: data.latitude, lng: data.longitude });
               } catch (error) {
-                console.error('[blocked and get IPApi failed]', error);
+                console.error('[blocked and get IP-API failed]', error);
               }
             };
             fetch();

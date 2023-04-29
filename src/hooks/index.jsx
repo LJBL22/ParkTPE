@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
 
-export const useGeolocation = (position, setPosition) => {
+export const useGeolocation = (setPosition) => {
   useEffect(() => {
     // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
     if ('geolocation' in navigator) {
