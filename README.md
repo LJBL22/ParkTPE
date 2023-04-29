@@ -39,7 +39,8 @@ The new skills I utilized in this side project include:
 - Parking space types and fees\*
 
 3. Allow users to move the map to view parking lots outside of their current location
-4. Supports desktop, tablet, and mobile devices
+4. Allow users to update their location after moving by clicking on the locate button
+5. Supports desktop, tablet, and mobile devices
 
 ## :truck: Installation
 
@@ -81,7 +82,7 @@ This information is sourced from the [Taipei City Parking Lot Information](https
 
 ## \*Features in plan
 
-- Parking fee: due to the complexity of the data structure for the FareInfo provided by the API, this feature will be completed in the near future.
+- Due to the complexity of the FareInfo data structure provided by the API, the circle UI for displaying parking fees is currently under development and not yet available on the map.
 
 ![fareInfo](./public/fareInfo.png)
 
