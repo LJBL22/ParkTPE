@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export const useGeolocation = () => {
-  const defaultPosition = { lat: 25.044761, lng: 121.536651 };
-  const [position, setPosition] = useState(defaultPosition);
-
+export const useGeolocation = (position, setPosition) => {
   useEffect(() => {
     // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
     if ('geolocation' in navigator) {
@@ -13,6 +10,7 @@ export const useGeolocation = () => {
         // 如果同意則抓取定位
         ({ coords }) => {
           setPosition({ lat: coords.latitude, lng: coords.longitude });
+          console.log('onSuccess');
         },
         // 處理錯誤
         (error) => {
@@ -32,8 +30,7 @@ export const useGeolocation = () => {
         }
       );
     }
-  }, []);
-  return position;
+  }, [setPosition]);
 };
 
 export const useCustomWindowSize = () => {

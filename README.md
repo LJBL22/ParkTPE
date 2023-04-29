@@ -1,6 +1,6 @@
 # Park&#x1F17F;TPE
 
-### :red_car: A Comprehensive Map for Web and Mobile
+### :red_car: A Comprehensive Taipei Carpark Map for Web and Mobile
 
 The new skills I utilized in this side project include:
 
@@ -20,9 +20,14 @@ The new skills I utilized in this side project include:
 
 ### :taxi: DEMO page [LINK](https://ljbl22.github.io/ParkTPE/)
 
-![intro](/public/intro.png)
-![geolocation](/public/geolocation.png)
-![popup-info](/public/popup-info.png)
+| desktop                                |
+| -------------------------------------- |
+| ![intro](./public/intro.png)           |
+| ![popup-info](./public/popup-info.png) |
+
+| mobile                         |                                            | tablet                         |
+| ------------------------------ | ------------------------------------------ | ------------------------------ |
+| ![mobile](./public/mobile.jpg) | ![mobile-popup](./public/mobile-popup.jpg) | ![tablet](./public/tablet.png) |
 
 ## :blue_car: Features:
 
@@ -31,7 +36,7 @@ The new skills I utilized in this side project include:
 
 - Total and available car spaces
 - Address, telephone number, and service hours
-- Parking space types and fees
+- Parking space types and fees*
 
 3. Allow users to move the map to view parking lots outside of their current location
 4. Supports desktop, tablet, and mobile devices
@@ -70,4 +75,20 @@ npm run dev
 
 ## License
 
-## Acknowledgement
+This information is sourced from the [Taipei City Parking Lot Information](https://data.gov.tw/dataset/128435) on the Government Open Data Platform. The original data is licensed under the [Government Open Data License, Version 1](https://data.gov.tw/license), and the source is required to be identified as the [Government Open Data Platform](https://data.gov.tw/) in accordance with the second requirement of the third article.
+
+此資料來源為政府資料開放平台中的臺北市停車場資訊，原始資料使用政府資料開放授權條款-第 1 版授權，依照第三條第二項要求標示出處為政府資料開放平台。
+
+## *Features in plan
+
+- Parking fee: due to the complexity of the data structure for the FareInfo provided by the API, this feature will be completed in the near future.
+
+![fareInfo](./public/fareInfo.png)
+
+## *Notification
+
+At times, the webpage may fail to load, and an error message of "The specified blob does not exist" can be found by inspecting the console. Possible reasons for this issue may include problems with the network connection or a failure in the server response from Azure. Please wait for a moment and try refreshing the page to restore normal functionality.
+
+![blob](./public/blob.png)
+
+

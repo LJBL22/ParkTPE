@@ -11,12 +11,11 @@ import { LocateBtn, Btn2 } from './Components/LocateBtn';
 
 function App() {
   const defaultPosition = { lat: 25.044761, lng: 121.536651 };
-  // const [position, setPosition] = useState(defaultPosition);
+  const [position, setPosition] = useState(defaultPosition);
   const [parkingLot, setParkingLot] = useState([]);
   const [spaceLeft, setSpaceLeft] = useState([]);
-  // const [clicked, setClicked] = useState(false); // 新增點擊狀態
   useCustomWindowSize();
-  const position = useGeolocation();
+  useGeolocation(position, setPosition);
 
   function MapCenter() {
     const map = useMap();
@@ -110,13 +109,19 @@ function App() {
               <h2>👋🏻 我在這裡</h2>
             </Popup>
           </Marker>
+          <LocateBtn
+            onClick={(e) => {
+              e.preventDefault();
+              handleBtnClick();
+            }}
+          />
+          {/* 新增按鈕 */}
+          <Btn2 onClick={handleBtn2Click} /> {/* 新增按鈕 */}
           <MarkerClusterGroup chunkedLoading>
             {/* render api markers */}
             {renderMarkers}
           </MarkerClusterGroup>
         </MapContainer>
-        <LocateBtn onClick={handleBtnClick} /> {/* 新增按鈕 */}
-        <Btn2 onClick={handleBtn2Click} /> {/* 新增按鈕 */}
       </div>
     </>
   );
