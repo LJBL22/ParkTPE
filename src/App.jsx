@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
 import { getParkingLot, getSpacesLeft } from './api';
 import CustomPopup from './Components/CustomPopup';
+import { LocateBtn } from './Components/LocateBtn';
+import axios from 'axios';
 
 function App() {
   const defaultPosition = { lat: 25.044761, lng: 121.536651 };
@@ -23,7 +25,36 @@ function App() {
     }, [position, map]);
     return null;
   }
-
+  function handleBtnClick() {
+    console.log('click 1 time');
+    // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
+    if ('geolocation' in navigator) {
+      // 呼叫 navigator.geoLocation
+      navigator.geolocation.getCurrentPosition(
+        // 如果同意則抓取定位
+        ({ coords }) => {
+          setPosition({ lat: coords.latitude, lng: coords.longitude });
+          console.log('onSuccess');
+        },
+        // 處理錯誤
+        (error) => {
+          console.error('Error:', error);
+          // 如果阻擋則取 IP 位置
+          if (error.code === error.PERMISSION_DENIED) {
+            const fetch = async () => {
+              try {
+                const { data } = await axios.get('https://ipapi.co/json');
+                setPosition({ lat: data.latitude, lng: data.longitude });
+              } catch (error) {
+                console.error('[blocked and get IPApi failed]', error);
+              }
+            };
+            fetch();
+          }
+        }
+      );
+    }
+  }
   // get API data
   useEffect(() => {
     const getParkingLotDataAsync = async () => {
@@ -89,7 +120,7 @@ function App() {
         <h1>Park&#x1F17F;TPE</h1>
       </nav>
       <div id='map'>
-        <MapContainer center={position} zoom={16} scrollWheelZoom={true}>
+        <MapContainer center={defaultPosition} zoom={16} scrollWheelZoom={true}>
           <MapCenter />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -101,6 +132,7 @@ function App() {
               <h2>👋🏻 我在這裡</h2>
             </Popup>
           </Marker>
+          <LocateBtn onClick={handleBtnClick} />
           <MarkerClusterGroup chunkedLoading>
             {/* render api markers */}
             {renderMarkers}
