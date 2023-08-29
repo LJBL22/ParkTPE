@@ -3,20 +3,19 @@ import './App.css';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { carIcon, parkingIcon, tw97ToWGS84 } from './utility';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
 import { getParkingLot, getSpacesLeft } from './api';
 import CustomPopup from './Components/CustomPopup';
 import { LocateBtn } from './Components/LocateBtn';
-import axios from 'axios';
+import ParkingContext from './Context';
 
 function App() {
-  const defaultPosition = { lat: 25.044761, lng: 121.536651 };
-  const [position, setPosition] = useState(defaultPosition);
+  const { position, defaultPosition } = useContext(ParkingContext);
   const [parkingLot, setParkingLot] = useState([]);
   const [spaceLeft, setSpaceLeft] = useState([]);
   useCustomWindowSize();
-  useGeolocation(setPosition);
+  useGeolocation();
 
   function MapCenter() {
     const map = useMap();
@@ -25,34 +24,7 @@ function App() {
     }, [position, map]);
     return null;
   }
-  function handleBtnClick() {
-    // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
-    if ('geolocation' in navigator) {
-      // 呼叫 navigator.geoLocation
-      navigator.geolocation.getCurrentPosition(
-        // 如果同意則抓取定位
-        ({ coords }) => {
-          setPosition({ lat: coords.latitude, lng: coords.longitude });
-        },
-        // 處理錯誤
-        (error) => {
-          console.error('Error:', error);
-          // 如果阻擋則取 IP 位置
-          if (error.code === error.PERMISSION_DENIED) {
-            const fetch = async () => {
-              try {
-                const { data } = await axios.get('https://ipapi.co/json');
-                setPosition({ lat: data.latitude, lng: data.longitude });
-              } catch (error) {
-                console.error('[blocked and get IP-API failed]', error);
-              }
-            };
-            fetch();
-          }
-        }
-      );
-    }
-  }
+
   // get API data
   useEffect(() => {
     const getParkingLotDataAsync = async () => {
@@ -130,7 +102,7 @@ function App() {
               <h2>👋🏻 我在這裡</h2>
             </Popup>
           </Marker>
-          <LocateBtn onClick={handleBtnClick} />
+          <LocateBtn />
           <MarkerClusterGroup chunkedLoading>
             {/* render api markers */}
             {renderMarkers}

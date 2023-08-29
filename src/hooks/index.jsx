@@ -1,7 +1,9 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import axios from 'axios';
+import ParkingContext from '../Context';
 
-export const useGeolocation = (setPosition) => {
+export const useGeolocation = () => {
+  const { position, setPosition } = useContext(ParkingContext);
   useEffect(() => {
     // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
     if ('geolocation' in navigator) {
