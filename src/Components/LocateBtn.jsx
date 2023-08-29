@@ -1,10 +1,41 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { MyLocationRounded } from '@mui/icons-material';
 import styled from 'styled-components';
+import ParkingContext from '../Context';
+import axios from 'axios';
 
-export const LocateBtn = ({ onClick }) => {
+export const LocateBtn = () => {
+  const { position, setPosition } = useContext(ParkingContext);
+  function handleBtnClick() {
+    // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
+    if ('geolocation' in navigator) {
+      // 呼叫 navigator.geoLocation
+      navigator.geolocation.getCurrentPosition(
+        // 如果同意則抓取定位
+        ({ coords }) => {
+          setPosition({ lat: coords.latitude, lng: coords.longitude });
+        },
+        // 處理錯誤
+        (error) => {
+          console.error('Error:', error);
+          // 如果阻擋則取 IP 位置
+          if (error.code === error.PERMISSION_DENIED) {
+            const fetch = async () => {
+              try {
+                const { data } = await axios.get('https://ipapi.co/json');
+                setPosition({ lat: data.latitude, lng: data.longitude });
+              } catch (error) {
+                console.error('[blocked and get IP-API failed]', error);
+              }
+            };
+            fetch();
+          }
+        }
+      );
+    }
+  }
   return (
-    <StyledBtn onClick={() => onClick?.()}>
+    <StyledBtn onClick={() => handleBtnClick()}>
       <MyLocationRounded />
     </StyledBtn>
   );
