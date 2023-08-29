@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { MyLocationRounded } from '@mui/icons-material';
 import styled from 'styled-components';
-import ParkingContext from '../Context';
 import axios from 'axios';
+import useParkingContext from '../hooks/use-parking-context';
 
 export const LocateBtn = () => {
-  const { position, setPosition } = useContext(ParkingContext);
+  const { setPosition } = useParkingContext();
   function handleBtnClick() {
     // 檢查瀏覽器是否支援 & 需要是 HTTPS 協議
     if ('geolocation' in navigator) {

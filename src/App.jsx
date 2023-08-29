@@ -3,15 +3,15 @@ import './App.css';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { carIcon, parkingIcon, tw97ToWGS84 } from './utility';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
 import { getParkingLot, getSpacesLeft } from './api';
 import CustomPopup from './Components/CustomPopup';
 import { LocateBtn } from './Components/LocateBtn';
-import ParkingContext from './Context';
+import useParkingContext from './hooks/use-parking-context';
 
 function App() {
-  const { position, defaultPosition } = useContext(ParkingContext);
+  const { position, defaultPosition } = useParkingContext();
   const [parkingLot, setParkingLot] = useState([]);
   const [spaceLeft, setSpaceLeft] = useState([]);
   useCustomWindowSize();
