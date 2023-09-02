@@ -2,13 +2,13 @@ import 'leaflet/dist/leaflet.css';
 import './App.css';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { carIcon, parkingIcon, tw97ToWGS84 } from './utility';
+import { carIcon } from './utility';
 import { useEffect, useState } from 'react';
 import { useGeolocation, useCustomWindowSize } from './hooks';
 import { getParkingLot, getSpacesLeft } from './api';
-import CustomPopup from './Components/CustomPopup';
 import { LocateBtn } from './Components/LocateBtn';
 import useParkingContext from './hooks/use-parking-context';
+import Markers from './Components/Markers';
 
 function App() {
   const { position, defaultPosition } = useParkingContext();
@@ -62,28 +62,6 @@ function App() {
     return () => clearInterval(intervalId);
   }, []);
 
-  // render 每一筆資料
-  const renderMarkers = parkingLot
-    // 篩掉非汽車的停車場
-    .filter((marker) => marker.totalcar > 0)
-    .map((marker) => {
-      // 取值轉換 marker 的經緯度
-      const { tw97x: x, tw97y: y } = marker;
-      const WGS84 = tw97ToWGS84(x, y);
-      const { lat, lng } = WGS84;
-      const markerPosition = [lat, lng];
-
-      // 取出剩餘車位資料
-      const space = spaceLeft.find((s) => s.id === marker.id); // 比對 id 找出符合的 spaceLeft 元素
-      const availableCar = space ? space.availablecar : null; // 符合則取值
-      //展開同名 props
-      return (
-        <Marker key={marker.id} position={markerPosition} icon={parkingIcon}>
-          <CustomPopup available={availableCar} {...marker} />
-        </Marker>
-      );
-    });
-
   return (
     <>
       <nav className='nav-top'>
@@ -104,8 +82,7 @@ function App() {
           </Marker>
           <LocateBtn />
           <MarkerClusterGroup chunkedLoading>
-            {/* render api markers */}
-            {renderMarkers}
+            <Markers parkingLot={parkingLot} spaceLeft={spaceLeft} />
           </MarkerClusterGroup>
         </MapContainer>
       </div>
